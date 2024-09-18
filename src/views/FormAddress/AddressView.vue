@@ -12,8 +12,11 @@
         <a-form-item label="Estado">
             <a-input v-model:value="formState.estado" />
         </a-form-item>
-        <a-form-item label="Data do voo">
-            <a-date-picker v-model:value="formState.dataVoo" />
+        <a-form-item label="Rua">
+            <a-input v-model:value="formState.rua" />
+        </a-form-item>
+        <a-form-item label="Número">
+            <a-input v-model:value="formState.numero" />
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
             <a-button type="primary" html-type="submit">Cadastrar</a-button>
@@ -31,19 +34,21 @@ import api from '../../api/api';
 import { useRouter } from 'vue-router';
 
 interface FormState {
+    cep: string;
     pais: string;
     cidade: string;
     estado: string;
-    dataVoo: string;
-    cep: string;
+    rua: string;
+    numero: string;
 }
 
 const formState: UnwrapRef<FormState> = reactive({
+    cep: '',
     pais: '',
     cidade: '',
     estado: '',
-    dataVoo: '',
-    cep: '',
+    rua: '',
+    numero: '',
 });
 
 const labelCol = { style: { width: '150px' } };

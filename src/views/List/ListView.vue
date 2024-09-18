@@ -2,7 +2,7 @@
   <div class="list-container">
     <a-table :columns="columns" :data-source="dataSource" bordered>
       <template #bodyCell="{ column, text, record }">
-        <template v-if="['voo', 'origem', 'destino', 'data'].includes(column.dataIndex)">
+        <template v-if="['id', 'cep', 'pais', 'estado'].includes(column.dataIndex)">
           <div>
             <a-input v-if="editableData[record.key]" v-model:value="editableData[record.key][column.dataIndex]"
               style="margin: -5px 0" />
@@ -38,71 +38,84 @@
     </div>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { CloseOutlined, EditOutlined } from '@ant-design/icons-vue';
-import { cloneDeep } from 'lodash-es';
-import { reactive, ref } from 'vue';
-import type { UnwrapRef } from 'vue';
+import { ref, reactive, onMounted } from 'vue'; // Ajuste a importação
+import api from '../../api/api';
+
+interface DataItem {
+  key: string;
+  id: string;
+  cep: string;
+  pais: string;
+  estado: string;
+}
 
 const columns = [
   {
-    title: 'Voo',
-    dataIndex: 'voo',
-    width: '20%',
+    title: 'ID',
+    dataIndex: 'id',
+    width: '25%',
   },
   {
-    title: 'Origem',
-    dataIndex: 'origem',
-    width: '20%',
+    title: 'CEP',
+    dataIndex: 'cep',
+    width: '25%',
   },
   {
-    title: 'Destino',
-    dataIndex: 'destino',
-    width: '20%',
+    title: 'País',
+    dataIndex: 'pais',
+    width: '25%',
   },
   {
-    title: 'Data',
-    dataIndex: 'data',
-    width: '20%',
+    title: 'Estado',
+    dataIndex: 'estado',
+    width: '25%',
   },
   {
     title: 'Ação',
     dataIndex: 'acao',
-    width: '20%'
+    width: '25%',
   },
 ];
-interface DataItem {
-  key: string;
-  voo: string;
-  origem: string;
-  destino: string;
-  data: string;
-}
-const data: DataItem[] = [];
-for (let i = 0; i < 10; i++) {
-  data.push({
-    key: i.toString(),
-    voo: `Voo ${i}`,
-    origem: `João Pessoa - PB`,
-    destino: `São Paulo - SP`,
-    data: '2001/01/01',
-  });
-}
 
-const dataSource = ref(data);
-const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
+const dataSource = ref<DataItem[]>([]);
+const editableData: Record<string, DataItem | undefined> = reactive({});
+
+const fetchFlights = async () => {
+    try {
+        const response = await api.get('/endereco');
+        const flights = response.data;
+        const formattedFlights = flights.map((flight: any, index: number) => ({
+            ...flight,
+            key: flight.id || index.toString(),
+        }));
+        dataSource.value = formattedFlights;
+    } catch (error) {
+        console.error('Erro ao buscar os voos:', error);
+    }
+};
 
 const edit = (key: string) => {
-  editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+  editableData[key] = JSON.parse(JSON.stringify(dataSource.value.find(item => key === item.key)));
 };
+
 const save = (key: string) => {
-  Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
+  Object.assign(dataSource.value.find(item => key === item.key), editableData[key]);
   delete editableData[key];
 };
+
 const cancel = (key: string) => {
   delete editableData[key];
 };
+
+// Buscar os voos quando o componente for montado
+onMounted(() => {
+    fetchFlights();
+});
+
 </script>
+
 <style scoped>
 .list-container {
   margin: 50px;

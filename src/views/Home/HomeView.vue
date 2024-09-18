@@ -1,9 +1,33 @@
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import api from '../../api/api'; // Certifique-se de que o caminho para sua API está correto
 
-const onSearch = (value: string) => {
-    console.log("Pesquisar por:", value);
+// Estado para armazenar os voos
+const flights = ref<any[]>([]);
+
+// Função para buscar os voos
+const fetchFlights = async () => {
+    try {
+        const response = await api.get('/endereco'); // Substitua '/endereco' pelo endpoint da sua API
+        // Ordena os dados pelo campo de data ou ID (presumindo que a API retorne os dados em ordem cronológica inversa)
+        const sortedFlights = response.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        // Mantém apenas os 3 últimos
+        flights.value = sortedFlights.slice(0, 3);
+    } catch (error) {
+        console.error('Erro ao buscar os voos:', error);
+    }
 };
+
+// Função para a busca
+const onSearch = (value: string) => {
+    console.log('Pesquisar por:', value);
+};
+
+// Buscar os voos quando o componente for montado
+onMounted(() => {
+    fetchFlights();
+});
 </script>
 
 <template>
@@ -13,11 +37,15 @@ const onSearch = (value: string) => {
                 <h2 class="custom-title">Desafio Neoron</h2>
             </template>
             <a-input-search placeholder="Pesquisar voo" enter-button @search="onSearch" style="margin-bottom: 20px" />
-            <p>Voo 1</p>
-            <p>Voo 2</p>
-            <p>Voo 3 </p>
+            <!-- Exibindo os voos -->
+            <div v-if="flights.length > 0">
+                <p v-for="flight in flights" :key="flight.id">{{ flight.id }} - {{ flight.endereco }}</p>
+            </div>
+            <div v-else>
+                <p>Nenhum voo encontrado.</p>
+            </div>
             <div class="button-group">
-                <RouterLink to="/cadastro">
+                <RouterLink to="/cadastro-endereco">
                     <a-button type="primary" block>Cadastrar voo</a-button>
                 </RouterLink>
 
