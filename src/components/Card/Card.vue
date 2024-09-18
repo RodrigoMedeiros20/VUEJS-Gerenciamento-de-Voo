@@ -1,12 +1,5 @@
 <script lang="ts" setup>
-
-const createFlight = () => {
-    console.log("Criar voo");
-};
-
-const listFlight = () => {
-    console.log("Listar voo");
-};
+import { RouterLink } from 'vue-router';
 
 const onSearch = (value: string) => {
     console.log("Pesquisar por:", value);
@@ -24,8 +17,10 @@ const onSearch = (value: string) => {
             <p>Voo 2</p>
             <p>Voo 3 </p>
             <div class="button-group">
-                <a-button type="primary" block @click="createFlight">Cadastrar voo</a-button>
-                <a-button type="default" block @click="listFlight">Listar todos os voos</a-button>
+                <a-button type="primary" block>Cadastrar voo</a-button>
+                <RouterLink to="/lista">
+                    <a-button type="default" block>Listar todos os voos</a-button>
+                </RouterLink>
             </div>
         </a-card>
     </div>
