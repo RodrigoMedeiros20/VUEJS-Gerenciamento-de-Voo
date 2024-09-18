@@ -17,7 +17,10 @@ const onSearch = (value: string) => {
             <p>Voo 2</p>
             <p>Voo 3 </p>
             <div class="button-group">
-                <a-button type="primary" block>Cadastrar voo</a-button>
+                <RouterLink to="/cadastro">
+                    <a-button type="primary" block>Cadastrar voo</a-button>
+                </RouterLink>
+
                 <RouterLink to="/lista">
                     <a-button type="default" block>Listar todos os voos</a-button>
                 </RouterLink>

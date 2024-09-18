@@ -26,12 +26,16 @@
               <a @click="edit(record.key)">
                 <CloseOutlined style="font-size: 20px;" />
               </a>
-
             </span>
           </div>
         </template>
       </template>
     </a-table>
+    <div style="display: flex; justify-content: center;">
+      <RouterLink to="/">
+        <a-button>Voltar</a-button>
+      </RouterLink>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>

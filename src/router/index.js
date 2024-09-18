@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/Home/HomeView.vue'
 import ListView from '../views/List/ListView.vue'
+import FormView from '../views/Form/FormView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/lista',
       name: 'lista',
       component: ListView
+    },
+    {
+      path: '/cadastro',
+      name: 'cadastro',
+      component: FormView
     }
   ]
 })
