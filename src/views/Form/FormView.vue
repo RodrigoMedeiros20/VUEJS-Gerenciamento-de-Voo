@@ -1,8 +1,5 @@
 <template>
     <a-form :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-item label="Código do voo">
-            <a-input v-model:value="formState.name" />
-        </a-form-item>
         <a-form-item label="Origem">
             <a-input v-model:value="formState.name" />
         </a-form-item>
